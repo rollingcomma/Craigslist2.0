@@ -1,4 +1,4 @@
-<%- include('../partials/head', {title:"Profile", css:"../../profile_page.css"}) -%>
+<%- include('../partials/head', {title:"Profile", css:"/static/profile_page.css"}) -%>
 <header class="d-flex justify-content-between align-items-center mt-4">
     <%- include('../partials/index/profile-header') -%>
 </header>
@@ -72,7 +72,7 @@
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
     </script>
 
-    <%- include('../partials/script', {javascript:javascript}) -%>
+    <%- include('../partials/script', {javascript:"/static/index.js"}) -%>
 </body>
 
 </html>

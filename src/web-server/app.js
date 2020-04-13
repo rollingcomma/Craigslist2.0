@@ -11,7 +11,7 @@ module.exports = function () {
 
   // Serve up the static front end code and image uploads
   // app.use('/api/user', express.static(path.join(__dirname, 'public')))
-  app.use(express.static(path.join(__dirname, 'public')))
+  app.use('/static', express.static(path.join(__dirname, 'public')))
 
   app.set('view engine', 'ejs');
   app.use(bodyParser.json());

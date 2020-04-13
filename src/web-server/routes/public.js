@@ -21,7 +21,7 @@ module.exports = function () {
           res.render("pages/index",
             {
               title: "Index",
-              css: "index.css",
+              css: "/static/index.css",
               label: "search",
               header: header,
               category: responses[0].data,
@@ -53,7 +53,7 @@ module.exports = function () {
         res.render("pages/listing",
           {
             title: "Listings",
-            css: "listings.css",
+            css: "/static/listings.css",
             label: "search",
             search: "",
             header: header,
@@ -73,37 +73,38 @@ module.exports = function () {
   router.get('/user/:id', (req, res) => {
     //if the user sent request logged in and his id equals to the user's id he required redirect to his own profile page
     if (req.user && req.user.id === req.params.id) res.redirect("/api/users/account")
+    else{
+      Promise.all([
+        axios.get(`${urlbase}/users/${req.params.id}`),
+        axios.get(`${urlbase}/ratings/${req.params.id}`)
+      ])
+        .then((responses) => {
+          //console.log(response);
+          let ratings = responses[1].data;
+          //set average_rating to 0 if user has no rating
+          // console.log(responses[0].data[0]);
+          responses[0].data[0].average_rating = responses[0].data[0] && responses[0].data[0].average_rating ? 0 : responses[0].data[0].average_rating
 
-    Promise.all([
-      axios.get(`${urlbase}/users/${req.params.id}`),
-      axios.get(`${urlbase}/ratings/${req.params.id}`)
-    ])
-      .then((responses) => {
-        //console.log(response);
-        let ratings = responses[1].data;
-        //set average_rating to 0 if user has no rating
+          const { username, email, average_rating, total_rating, is_verified } = responses[0].data[0];
 
-        responses[0].data[0].average_rating = responses[0].data[0].average_rating ? 0 : responses[0].data[0].average_rating
-
-        const { username, email, average_rating, total_rating, is_verified } = responses[0].data[0];
-
-        // console.log(ratings)
-        ratings.map(rating => rating.created_at = rating.created_at.substr(0, 10));
-        res.render('pages/userprofile', {
-          javascript: "index.js",
-          username: username,
-          email: email,
-          average_rating: average_rating,
-          total_rating: total_rating,
-          is_verified: is_verified,
-          ratings: ratings,
-          show_personal_listings: false
+          // console.log(ratings)
+          ratings.map(rating => rating.created_at = rating.created_at.substr(0, 10));
+          res.render('pages/userprofile', {
+            // javascript: "index.js",
+            username: username,
+            email: email,
+            average_rating: average_rating,
+            total_rating: total_rating,
+            is_verified: is_verified,
+            ratings: ratings,
+            show_personal_listings: false
+          })
         })
-      })
-      .catch((err) => {
-        console.log(err)
-        res.status(500).send("Internal server error")
-      })
+        .catch((err) => {
+          console.log(err)
+          res.status(500).send("Internal server error")
+        })
+      }
   })
 
   router.post("/signup", (req, res) => {
@@ -200,7 +201,7 @@ module.exports = function () {
           res.render("pages/listing",
             {
               title: "Listings",
-              css: "listings.css",
+              css: "/static/listings.css",
               label: "search",
               header: header,
               category: responses[0].data,
@@ -241,7 +242,7 @@ module.exports = function () {
         res.render("pages/listing",
           {
             title: "listings by Category",
-            css: "../listings.css",
+            css: "/static//listings.css",
             label: "search",
             header: header,
             category: responses[1].data,

@@ -54,7 +54,7 @@ module.exports = function (passport) {
 
             ratings.map(rating => rating.created_at = rating.created_at.substr(0, 10));
             res.render('pages/userprofile', {
-                javascript: "../../index.js",
+                javascript: "/static/index.js",
                 username: username,
                 email: email,
                 average_rating: average_rating,
