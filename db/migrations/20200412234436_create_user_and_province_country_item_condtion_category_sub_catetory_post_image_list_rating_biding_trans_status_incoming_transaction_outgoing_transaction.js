@@ -33,11 +33,11 @@ exports.up = function(knex) {
     table.timestamp('updated_at').defaultTo(knex.fn.now());
   })
   .createTable('item_condition', table => {
-    table.increments('id').primary();
+    table.integer('id').primary();
     table.string('name').notNullable();
   })
   .createTable('category', table => {
-    table.increments('id').primary();
+    table.integer('id').primary();
     table.string('name').notNullable();
   })
   .createTable('sub_category', table => {
@@ -47,20 +47,20 @@ exports.up = function(knex) {
      * has to change id to integer then user raw to alter table
      */
     table.integer('id').notNullable(); 
-    table.integer('category_id').unsigned().references('id').inTable('category');
+    table.integer('category_id').references('id').inTable('category');
     table.string('name').notNullable();
     table.primary(['id','category_id']);
   })
-  .raw('ALTER TABLE sub_category MODIFY id INT UNSIGNED AUTO_INCREMENT')
+  // .raw('ALTER TABLE sub_category MODIFY id INT UNSIGNED AUTO_INCREMENT')
   .createTable('post', table => {
     table.increments('id').primary();
     table.integer('seller').unsigned().references('id').inTable('user');
     table.string('title').notNullable();
     table.text('description');
     table.decimal('price', 6, 2).notNullable();
-    table.integer('item_condition_id').unsigned().references('id').inTable('item_condition');
-    table.integer('category_id').unsigned().references('id').inTable('category');
-    table.integer('sub_category_id').unsigned().references('id').inTable('sub_category');
+    table.integer('item_condition_id').references('id').inTable('item_condition');
+    table.integer('category_id').references('id').inTable('category');
+    table.integer('sub_category_id').references('id').inTable('sub_category');
     table.timestamp('created_at').defaultTo(knex.fn.now());
     table.boolean('is_active').defaultTo(true);
   })
@@ -87,7 +87,7 @@ exports.up = function(knex) {
     table.timestamp('created_at').defaultTo(knex.fn.now());
   })
   .createTable('trans_status', table => {
-    table.increments('id').primary();
+    table.integer('id').primary();
     table.string('name');
   })
   .createTable('incoming_transaction', table => {
@@ -96,7 +96,7 @@ exports.up = function(knex) {
     table.integer('sender').unsigned().references('id').inTable('user');
     table.integer('post_id').unsigned().references('id').inTable('post');
     table.integer('payment_account_id').unsigned().references('id').inTable('payment_account');
-    table.integer('trans_status_id').unsigned().references('id').inTable('trans_status');
+    table.integer('trans_status_id').references('id').inTable('trans_status');
     table.timestamp('created_at').defaultTo(knex.fn.now());
   })
   .createTable('outgoing_transaction', table => {
@@ -105,7 +105,7 @@ exports.up = function(knex) {
     table.integer('receiver').unsigned().references('id').inTable('user');
     table.integer('incoming_transaction_id').unsigned().references('id').inTable('incoming_transaction');
     table.integer('payment_account_id').unsigned().references('id').inTable('payment_account');
-    table.integer('trans_status_id').unsigned().references('id').inTable('trans_status');
+    table.integer('trans_status_id').references('id').inTable('trans_status');
     table.timestamp('created_at').defaultTo(knex.fn.now());
   });
 };
@@ -119,8 +119,8 @@ exports.down = function(knex) {
   .dropTableIfExists('rating')
   .dropTableIfExists('image_list')
   .dropTableIfExists('post')
-  .dropTableIfExists('category')
   .dropTableIfExists('sub_category')
+  .dropTableIfExists('category')
   .dropTableIfExists('item_condition')
   .dropTableIfExists('payment_account')
   .dropTableIfExists('user')

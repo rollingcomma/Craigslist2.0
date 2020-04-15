@@ -6,7 +6,7 @@ const dbConfig = ({
     host: process.env.dsn,
     user: process.env.admin,
     password: process.env.password,
-    database: `craiglist2_project`
+    database: `craiglist2`
 });
 
 const connectionHandler = () => {
